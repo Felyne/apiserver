@@ -86,6 +86,7 @@ func Sign(ctx *gin.Context, c Context, secret string) (tokenString string, err e
 		"username": c.Username,
 		"nbf":      time.Now().Unix(),
 		"iat":      time.Now().Unix(),
+		"exp":      time.Now().Unix() + 86400, //24小时后token过期
 	})
 	// Sign the token with the specified secret.
 	tokenString, err = token.SignedString([]byte(secret))
