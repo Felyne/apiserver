@@ -11,6 +11,15 @@ import (
 	"github.com/lexkong/log/lager"
 )
 
+type CreateRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type CreateResponse struct {
+	Username string `json:"username"`
+}
+
 func Create(c *gin.Context) {
 	log.Info("User Create function called.", lager.Data{"X-Request-Id": util.GetReqID(c)})
 	var r CreateRequest

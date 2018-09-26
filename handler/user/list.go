@@ -2,11 +2,23 @@ package user
 
 import (
 	. "apiserver/handler"
+	"apiserver/model"
 	"apiserver/pkg/errno"
 	"apiserver/service"
 
 	"github.com/gin-gonic/gin"
 )
+
+type ListRequest struct {
+	Username string `json:"username"`
+	Offset   int    `json:"offset"`
+	Limit    int    `json:"limit"`
+}
+
+type ListResponse struct {
+	TotalCount uint64            `json:"totalCount"`
+	UserList   []*model.UserInfo `json:"userList"`
+}
 
 func List(c *gin.Context) {
 	var r ListRequest

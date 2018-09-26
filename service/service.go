@@ -2,7 +2,7 @@ package service
 
 import (
 	"apiserver/model"
-	"apiserver_demos/demo07/util"
+	"apiserver/util"
 	"fmt"
 	"sync"
 )
