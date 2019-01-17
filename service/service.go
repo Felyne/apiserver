@@ -8,13 +8,13 @@ import (
 )
 
 func ListUser(username string, offset, limit int) ([]*model.UserInfo, uint64, error) {
-	infos := make([]*model.UserInfo, 0)
+	infoList := make([]*model.UserInfo, 0)
 	users, count, err := model.ListUser(username, offset, limit)
 	if err != nil {
 		return nil, count, err
 	}
 
-	ids := []uint64{}
+	ids := make([]uint64, len(users))
 	for _, user := range users {
 		ids = append(ids, user.Id)
 	}
@@ -63,8 +63,8 @@ func ListUser(username string, offset, limit int) ([]*model.UserInfo, uint64, er
 	}
 
 	for _, id := range ids {
-		infos = append(infos, userList.IdMap[id])
+		infoList = append(infoList, userList.IdMap[id])
 	}
 
-	return infos, count, nil
+	return infoList, count, nil
 }

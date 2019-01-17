@@ -5,7 +5,7 @@ import (
 	"github.com/teris-io/shortid"
 )
 
-func GetShortId() (string, error) {
+func GenShortId() (string, error) {
 	return shortid.Generate()
 }
 

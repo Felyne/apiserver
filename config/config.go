@@ -13,9 +13,9 @@ type Config struct {
 	Name string
 }
 
-func Init(cfg string) error {
+func Init(fileName string) error {
 	c := Config{
-		Name: cfg,
+		Name: fileName,
 	}
 
 	// 初始化配置文件

@@ -10,9 +10,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+//24小时后token过期
+const expire = 86400
+
 var (
 	// ErrMissingHeader means the `Authorization` header was empty.
-	ErrMissingHeader = errors.New("The length of the `Authorization` header is zero.")
+	ErrMissingHeader = errors.New("the length of the `Authorization` header is zero")
 )
 
 // Context is the context of the JSON web token.
@@ -70,7 +73,7 @@ func ParseRequest(c *gin.Context) (*Context, error) {
 
 	var t string
 	// Parse the header to get the token part.
-	fmt.Sscanf(header, "Bearer %s", &t)
+	_, _ = fmt.Sscanf(header, "Bearer %s", &t)
 	return Parse(t, secret)
 }
 
@@ -86,7 +89,7 @@ func Sign(ctx *gin.Context, c Context, secret string) (tokenString string, err e
 		"username": c.Username,
 		"nbf":      time.Now().Unix(),
 		"iat":      time.Now().Unix(),
-		"exp":      time.Now().Unix() + 86400, //24小时后token过期
+		"exp":      time.Now().Unix() + expire,
 	})
 	// Sign the token with the specified secret.
 	tokenString, err = token.SignedString([]byte(secret))

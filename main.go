@@ -3,10 +3,14 @@ package main
 import (
 	"apiserver/config"
 	"apiserver/model"
+	v "apiserver/pkg/version"
 	"apiserver/router"
 	"apiserver/router/middleware"
 	"errors"
+	"fmt"
+	"github.com/gin-gonic/gin/json"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,11 +20,22 @@ import (
 )
 
 var (
-	cfg = pflag.StringP("config", "c", "", "apiserver config file path.")
+	cfg = pflag.StringP("config", "c", "", "config file path.")
+	version = pflag.BoolP("version", "v", false, "show version info.")
 )
 
 func main() {
 	pflag.Parse()
+	if *version {
+		value := v.Get()
+		info, err := json.MarshalIndent(&value, "", " ")
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println(string(info))
+		return
+	}
 
 	if err := config.Init(*cfg); err != nil {
 		panic(err)
@@ -45,9 +60,18 @@ func main() {
 		}
 		log.Info("The router has been deployed successfully.")
 	}()
-	log.Infof("Start to listening the incoming requests on http address: %s", viper.GetString("addr"))
-	log.Info(http.ListenAndServe(viper.GetString("addr"), g).Error())
+	cert := viper.GetString("tls.cert")
+	key := viper.GetString("tls.key")
+	if cert != "" && key != "" {
+		tlsAddr := viper.GetString("tls.addr")
+		go func() {
+			log.Infof("Start to listening the incoming requests on https address: %s", tlsAddr)
+			log.Info(http.ListenAndServeTLS(tlsAddr, cert, key, g).Error())
+		}()
+	}
 
+	log.Infof("Start to listening the incoming requests on http address: %s")
+	log.Info(http.ListenAndServe(viper.GetString("addr"), g).Error())
 }
 
 // pingServer pings the http server to make sure the router is working.
@@ -62,5 +86,5 @@ func pingServer() error {
 		time.Sleep(time.Second)
 	}
 
-	return errors.New("Cannot connect to the router.")
+	return errors.New("cannot connect to the router")
 }
