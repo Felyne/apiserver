@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	cfg = pflag.StringP("config", "c", "", "config file path.")
+	cfg     = pflag.StringP("config", "c", "", "config file path.")
 	version = pflag.BoolP("version", "v", false, "show version info.")
 )
 
