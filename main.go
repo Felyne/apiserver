@@ -74,10 +74,13 @@ func main() {
 	log.Info(http.ListenAndServe(viper.GetString("addr"), g).Error())
 }
 
-// pingServer pings the http server to make sure the router is working.
+// make sure the router is working.
 func pingServer() error {
-	for i := 0; i < viper.GetInt("max_ping_count"); i++ {
-		resp, err := http.Get(viper.GetString("url") + "/sd/health")
+	count := viper.GetInt("max_ping_count")
+	url := viper.GetString("url")
+
+	for i := 0; i < count; i++ {
+		resp, err := http.Get(url + "/sd/health")
 		if err == nil && resp.StatusCode == 200 {
 			return nil
 		}
