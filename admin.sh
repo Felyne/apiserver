@@ -25,7 +25,7 @@ function start()
 	fi
 }
 
-function status()
+function status() 
 {
 	if [ "`pgrep $SERVER -u $UID`" != "" ];then
 		echo $SERVER is running
@@ -34,7 +34,7 @@ function status()
 	fi
 }
 
-function stop()
+function stop() 
 {
 	if [ "`pgrep $SERVER -u $UID`" != "" ];then
 		kill -9 `pgrep $SERVER -u $UID`
@@ -51,18 +51,18 @@ function stop()
 case "$1" in
 	'start')
 	start
-	;;
+	;;  
 	'stop')
 	stop
-	;;
+	;;  
 	'status')
 	status
-	;;
+	;;  
 	'restart')
 	stop && start
-	;;
-	*)
+	;;  
+	*)  
 	echo "usage: $0 {start|stop|restart|status}"
 	exit 1
-	;;
+	;;  
 esac

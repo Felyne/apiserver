@@ -12,7 +12,6 @@ type BaseModel struct {
 	DeletedAt *time.Time `gorm:"column:deletedAt" sql:"index" json:"-"`
 }
 
-// 返回的用户信息
 type UserInfo struct {
 	Id        uint64 `json:"id"`
 	Username  string `json:"username"`
@@ -27,6 +26,7 @@ type UserList struct {
 	IdMap map[uint64]*UserInfo
 }
 
+// Token represents a JSON web token.
 type Token struct {
 	Token string `json:"token"`
 }

@@ -1,16 +1,14 @@
 package auth
 
-import (
-	"golang.org/x/crypto/bcrypt"
-)
+import "golang.org/x/crypto/bcrypt"
 
-// 加密密码
+// Encrypt encrypts the plain text with bcrypt.
 func Encrypt(source string) (string, error) {
 	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(source), bcrypt.DefaultCost)
-	// 返回长度为60的字符串
 	return string(hashedBytes), err
 }
 
+// Compare compares the encrypted text with the plain text if it's the same.
 func Compare(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }

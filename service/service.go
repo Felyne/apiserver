@@ -1,20 +1,21 @@
 package service
 
 import (
-	"apiserver/model"
-	"apiserver/util"
 	"fmt"
 	"sync"
+
+	"apiserver/model"
+	"apiserver/util"
 )
 
 func ListUser(username string, offset, limit int) ([]*model.UserInfo, uint64, error) {
-	infoList := make([]*model.UserInfo, 0)
+	infos := make([]*model.UserInfo, 0)
 	users, count, err := model.ListUser(username, offset, limit)
 	if err != nil {
 		return nil, count, err
 	}
 
-	ids := make([]uint64, len(users))
+	ids := []uint64{}
 	for _, user := range users {
 		ids = append(ids, user.Id)
 	}
@@ -26,8 +27,9 @@ func ListUser(username string, offset, limit int) ([]*model.UserInfo, uint64, er
 	}
 
 	errChan := make(chan error, 1)
-	finishChan := make(chan bool, 1)
+	finished := make(chan bool, 1)
 
+	// Improve query efficiency in parallel
 	for _, u := range users {
 		wg.Add(1)
 		go func(u *model.UserModel) {
@@ -38,6 +40,7 @@ func ListUser(username string, offset, limit int) ([]*model.UserInfo, uint64, er
 				errChan <- err
 				return
 			}
+
 			userList.Lock.Lock()
 			defer userList.Lock.Unlock()
 			userList.IdMap[u.Id] = &model.UserInfo{
@@ -53,18 +56,18 @@ func ListUser(username string, offset, limit int) ([]*model.UserInfo, uint64, er
 
 	go func() {
 		wg.Wait()
-		close(finishChan)
+		close(finished)
 	}()
 
 	select {
-	case <-finishChan:
+	case <-finished:
 	case err := <-errChan:
 		return nil, count, err
 	}
 
 	for _, id := range ids {
-		infoList = append(infoList, userList.IdMap[id])
+		infos = append(infos, userList.IdMap[id])
 	}
 
-	return infoList, count, nil
+	return infos, count, nil
 }

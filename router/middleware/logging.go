@@ -35,23 +35,18 @@ func Logging() gin.HandlerFunc {
 		if !reg.MatchString(path) {
 			return
 		}
-
 		// Skip for the health check requests.
 		if path == "/sd/health" || path == "/sd/ram" || path == "/sd/cpu" || path == "/sd/disk" {
 			return
 		}
 
-		// Read the Body content
 		var bodyBytes []byte
 		if c.Request.Body != nil {
 			bodyBytes, _ = ioutil.ReadAll(c.Request.Body)
 		}
-
 		// Restore the io.ReadCloser to its original state
-		// NopCloser用一个无操作的 Close 方法包装r返回一个 ReadCloser 接口
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
-		// The basic informations.
 		method := c.Request.Method
 		ip := c.ClientIP()
 
@@ -62,16 +57,13 @@ func Logging() gin.HandlerFunc {
 		}
 		c.Writer = blw
 
-		// Continue.
 		c.Next()
 
-		// Calculates the latency.
 		end := time.Now().UTC()
 		latency := end.Sub(start)
 
 		code, message := -1, ""
 
-		// get code and message
 		var response handler.Response
 		if err := json.Unmarshal(blw.body.Bytes(), &response); err != nil {
 			log.Errorf(err, "response body can not unmarshal to model.Response struct, body: `%s`", blw.body.Bytes())
