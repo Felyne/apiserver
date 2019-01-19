@@ -31,20 +31,16 @@ func Update(c *gin.Context) {
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-
 	// We update the record based on the user id.
 	u.Id = uint64(userId)
-
 	if err := u.Validate(); err != nil {
 		SendResponse(c, errno.ErrValidation, nil)
 		return
 	}
-
 	if err := u.Encrypt(); err != nil {
 		SendResponse(c, errno.ErrEncrypt, nil)
 		return
 	}
-
 	if err := u.Update(); err != nil {
 		SendResponse(c, errno.ErrDatabase, nil)
 		return

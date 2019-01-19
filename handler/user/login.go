@@ -23,19 +23,16 @@ func Login(c *gin.Context) {
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-
 	// Get the user information by the login username.
 	d, err := model.GetUser(u.Username)
 	if err != nil {
 		SendResponse(c, errno.ErrUserNotFound, nil)
 		return
 	}
-
 	if err := auth.Compare(d.Password, u.Password); err != nil {
 		SendResponse(c, errno.ErrPasswordIncorrect, nil)
 		return
 	}
-
 	// Sign the json web token.
 	t, err := token.Sign(c, token.Context{ID: d.Id, Username: d.Username}, "")
 	if err != nil {

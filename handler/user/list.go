@@ -24,7 +24,6 @@ func List(c *gin.Context) {
 		SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-
 	infos, count, err := service.ListUser(r.Username, r.Offset, r.Limit)
 	if err != nil {
 		SendResponse(c, err, nil)
