@@ -90,4 +90,5 @@ curl -XPOST -H "Content-Type: application/json" http://127.0.0.1:8080/login -d'{
 # 请求头带上token
 curl -XPOST -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" http://127.0.0.1:8080/v1/user -d'{"username":"user1","password":"user1234"}'
 ```
-可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求带上
+* 可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求头带上tokne  
+* 也可用项目根目录下的test.py测试
