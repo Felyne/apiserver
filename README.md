@@ -3,7 +3,19 @@
 
 基于Golang搭建 RESTful API 服务
 
-## 目录结构
+### 准备工作
+```shell
+docker run -d -p 3306:3306 --name mymysql \
+-v $PWD/conf:/etc/mysql/conf.d -v $PWD/logs:/logs -v $PWD/data:/var/lib/mysql \
+-e MYSQL_ROOT_PASSWORD=123456 mysql:5.7
+
+mysql -h 127.0.0.1 -P 3306 -u root -p
+
+mysql>  source db.sql
+
+```
+
+### 目录结构
 
         ├── admin.sh                     # 进程的start|stop|status|restart控制文件
         ├── conf                         # 配置文件统一存放目录
@@ -68,3 +80,14 @@
             ├── golang.org
             ├── gopkg.in
             └── vendor.json
+
+### 注意
+api身份验证用的是 JSON Web Token
+```shell
+# 登录
+curl -XPOST -H "Content-Type: application/json" http://127.0.0.1:8080/login -d'{"username":"admin","password":"admin"}'
+
+# 请求头带上token
+curl -XPOST -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" http://127.0.0.1:8080/v1/user -d'{"username":"user1","password":"user1234"}'
+```
+可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求带上
