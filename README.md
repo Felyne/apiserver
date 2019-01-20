@@ -84,7 +84,7 @@ mysql>  source db.sql
 ### 注意
 api身份验证用的是 JSON Web Token
 ```shell
-# 登录
+# 登录返回token信息
 curl -XPOST -H "Content-Type: application/json" http://127.0.0.1:8080/login -d'{"username":"admin","password":"admin"}'
 
 # 请求头带上token
