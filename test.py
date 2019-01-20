@@ -38,8 +38,8 @@ def createUser():
 
 def getUser():
     url = getUrl('/v1/user/test')
-    userList = requests.get(url, headers=tokenHeader).json()
-    print(dumps(userList, indent=2))
+    userInfo = requests.get(url, headers=tokenHeader).json()
+    print(dumps(userInfo, indent=2))
 
 
 def listUser():
