@@ -1,7 +1,7 @@
 
 ## apiserver
 
-基于Golang搭建 RESTful API 服务
+基于Golang的gin框架搭建 RESTful API 服务
 
 ### 准备工作
 ```shell
@@ -12,6 +12,16 @@ docker run -d -p 3306:3306 --name mymysql \
 mysql -h 127.0.0.1 -P 3306 -u root -p
 
 mysql>  source db.sql
+
+```
+
+### 安装
+```
+# 有些第三方包下载不了，加个代理
+export GOPROXY=https://athens.azurefd.net
+
+# 编译
+make
 
 ```
 
@@ -81,7 +91,7 @@ mysql>  source db.sql
             ├── gopkg.in
             └── vendor.json
 
-### 注意
+### 使用
 api身份验证用的是 JSON Web Token
 ```shell
 # 登录返回token信息
@@ -90,5 +100,6 @@ curl -XPOST -H "Content-Type: application/json" http://127.0.0.1:8080/login -d'{
 # 请求头带上token
 curl -XPOST -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" http://127.0.0.1:8080/v1/user -d'{"username":"user1","password":"user1234"}'
 ```
-* 可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求头带上tokne  
-* 也可用项目根目录下的test.py测试
+
+* 可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求头带上token
+* 可用项目根目录下的test.py测试
