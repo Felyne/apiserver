@@ -22,7 +22,7 @@ type Context struct {
 }
 
 func getJwtSecret() string {
-	viper.GetString("jwt_secret")
+	return viper.GetString("jwt_secret")
 }
 
 // secretFunc validates the secret format.
