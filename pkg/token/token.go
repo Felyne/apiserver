@@ -21,6 +21,10 @@ type Context struct {
 	Username string
 }
 
+func getJwtSecret() string {
+	viper.GetString("jwt_secret")
+}
+
 // secretFunc validates the secret format.
 func secretFunc(secret string) jwt.Keyfunc {
 	return func(token *jwt.Token) (interface{}, error) {
@@ -63,7 +67,7 @@ func ParseRequest(c *gin.Context) (*Context, error) {
 	header := c.Request.Header.Get("Authorization")
 
 	// Load the jwt secret from config
-	secret := viper.GetString("jwt_secret")
+	secret := getJwtSecret()
 
 	if len(header) == 0 {
 		return &Context{}, ErrMissingHeader
@@ -79,7 +83,7 @@ func ParseRequest(c *gin.Context) (*Context, error) {
 func Sign(ctx *gin.Context, c Context, secret string) (tokenString string, err error) {
 	// Load the jwt secret from the Gin config if the secret isn't specified.
 	if secret == "" {
-		secret = viper.GetString("jwt_secret")
+		secret = getJwtSecret()
 	}
 	// The token content.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
