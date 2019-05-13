@@ -103,3 +103,27 @@ curl -XPOST -H "Authorization: Bearer ${token}" -H "Content-Type: application/js
 
 * 可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求头带上token
 * 可用项目根目录下的test.py测试
+
+### http压测
+
+安装wrk
+```
+apt install libssl-dev
+git clone https://github.com/wg/wrk
+cd wrk
+make
+cp wrk /usr/local/bin/
+```
+简单测试
+```
+wrk --latency -t16 -d60s -T30s http://127.0.0.1:8080/sd/health -c 200
+```
+
+一个生成图表的工具
+```
+apt install gnuplot
+```
+真正测试
+```
+./wrktest.sh
+```
