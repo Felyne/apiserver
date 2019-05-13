@@ -10,10 +10,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	// ErrMissingHeader means the `Authorization` header was empty.
-	ErrMissingHeader = errors.New("The length of the `Authorization` header is zero.")
-)
+var expire = 3600 //token过期时间
+var ErrMissingHeader = errors.New("The length of the `Authorization` header is zero")
 
 // Context is the context of the JSON web token.
 type Context struct {
@@ -39,8 +37,8 @@ func secretFunc(secret string) jwt.Keyfunc {
 
 // Parse validates the token with the specified secret,
 // and returns the context if the token was valid.
-func Parse(tokenString string, secret string) (*Context, error) {
-	ctx := &Context{}
+func Parse(tokenString string, secret string) (Context, error) {
+	ctx := Context{}
 
 	// Parse the token.
 	token, err := jwt.Parse(tokenString, secretFunc(secret))
@@ -63,14 +61,14 @@ func Parse(tokenString string, secret string) (*Context, error) {
 
 // ParseRequest gets the token from the header and
 // pass it to the Parse function to parses the token.
-func ParseRequest(c *gin.Context) (*Context, error) {
+func ParseRequest(c *gin.Context) (Context, error) {
 	header := c.Request.Header.Get("Authorization")
 
 	// Load the jwt secret from config
 	secret := getJwtSecret()
 
 	if len(header) == 0 {
-		return &Context{}, ErrMissingHeader
+		return Context{}, ErrMissingHeader
 	}
 
 	var t string
@@ -85,12 +83,14 @@ func Sign(ctx *gin.Context, c Context, secret string) (tokenString string, err e
 	if secret == "" {
 		secret = getJwtSecret()
 	}
+	now := time.Now().Unix()
 	// The token content.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":       c.ID,
 		"username": c.Username,
-		"nbf":      time.Now().Unix(),
-		"iat":      time.Now().Unix(),
+		"nbf":      now,
+		"iat":      now,
+		"exp":      now + int64(expire),
 	})
 	// Sign the token with the specified secret.
 	tokenString, err = token.SignedString([]byte(secret))
