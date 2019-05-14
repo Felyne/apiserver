@@ -11,12 +11,12 @@ function start()
 {
 	if [ "`pgrep $SERVER -u $UID`" != "" ];then
 		echo "$SERVER already running"
-		exit 1
+		exit 0
 	fi
 
-	nohup $BASE_DIR/$SERVER $ARGS  server &>/dev/null &
+	nohup $BASE_DIR/$SERVER $ARGS &>/dev/null &
 
-	echo "sleeping..." &&  sleep $INTERVAL
+	echo "waiting..." &&  sleep $INTERVAL
 
 	# check status
 	if [ "`pgrep $SERVER -u $UID`" == "" ];then
@@ -37,13 +37,27 @@ function status()
 function stop() 
 {
 	if [ "`pgrep $SERVER -u $UID`" != "" ];then
-		kill -9 `pgrep $SERVER -u $UID`
+		kill -15 `pgrep $SERVER -u $UID`
 	fi
 
-	echo "sleeping..." &&  sleep $INTERVAL
+	echo "waiting..." &&  sleep $INTERVAL
 
 	if [ "`pgrep $SERVER -u $UID`" != "" ];then
 		echo "$SERVER stop failed"
+		exit 1
+	fi
+}
+
+function kill_f() 
+{
+	if [ "`pgrep $SERVER -u $UID`" != "" ];then
+		kill -9 `pgrep $SERVER -u $UID`
+	fi
+
+	echo "waiting..." &&  sleep $INTERVAL
+
+	if [ "`pgrep $SERVER -u $UID`" != "" ];then
+		echo "$SERVER kill failed"
 		exit 1
 	fi
 }
@@ -54,6 +68,9 @@ case "$1" in
 	;;  
 	'stop')
 	stop
+	;;
+	'kill')
+	kill_f
 	;;  
 	'status')
 	status
@@ -62,7 +79,7 @@ case "$1" in
 	stop && start
 	;;  
 	*)  
-	echo "usage: $0 {start|stop|restart|status}"
+	echo "usage: $0 {start|stop|restart|kill|status}"
 	exit 1
 	;;  
 esac
