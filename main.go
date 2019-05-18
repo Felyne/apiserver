@@ -7,11 +7,13 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
+	"runtime"
+	"strconv"
 	"time"
 
 	"apiserver/config"
 	"apiserver/model"
-	v "apiserver/pkg/version"
+	ver "apiserver/pkg/version"
 	"apiserver/router"
 	"apiserver/router/middleware"
 
@@ -39,7 +41,7 @@ var (
 func main() {
 	pflag.Parse()
 	if *version {
-		v := v.Get()
+		v := ver.Get()
 		marshalled, err := json.MarshalIndent(&v, "", "  ")
 		if err != nil {
 			fmt.Printf("%v\n", err)
@@ -61,6 +63,7 @@ func main() {
 	g := gin.New()
 	router.Load(
 		g,
+		//middleware.Throttle(100),
 		middleware.Logging(),
 		middleware.RequestId(),
 	)
@@ -72,7 +75,7 @@ func main() {
 		}
 		log.Info("The router has been deployed successfully.")
 	}()
-
+	go countGoroutines()
 	cert := viper.GetString("tls.cert")
 	key := viper.GetString("tls.key")
 	if cert != "" && key != "" {
@@ -85,6 +88,7 @@ func main() {
 
 	log.Infof("Start to listening the incoming requests on http address: %s", viper.GetString("addr"))
 	log.Info(http.ListenAndServe(viper.GetString("addr"), g).Error())
+
 }
 
 func pingServer() error {
@@ -100,4 +104,14 @@ func pingServer() error {
 		time.Sleep(time.Second)
 	}
 	return errors.New("Cannot connect to the router.")
+}
+
+
+func countGoroutines() {
+	http.HandleFunc("/goroutines", func(w http.ResponseWriter, r *http.Request) {
+		num := strconv.FormatInt(int64(runtime.NumGoroutine()), 10)
+		_, _ = w.Write([]byte(num))
+	})
+	http.ListenAndServe("localhost:6060", nil)
+	log.Info("goroutine stats and pprof listen on 6060")
 }

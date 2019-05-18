@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var expire = 3600 //token过期时间
+const expire int64 = 3600 //token过期时间
 var ErrMissingHeader = errors.New("The length of the `Authorization` header is zero")
 
 // Context is the context of the JSON web token.
@@ -90,7 +90,7 @@ func Sign(ctx *gin.Context, c Context, secret string) (tokenString string, err e
 		"username": c.Username,
 		"nbf":      now,
 		"iat":      now,
-		"exp":      now + int64(expire),
+		"exp":      now + expire,
 	})
 	// Sign the token with the specified secret.
 	tokenString, err = token.SignedString([]byte(secret))

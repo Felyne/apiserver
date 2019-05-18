@@ -15,4 +15,9 @@ var (
 	ErrUserNotFound      = &Errno{Code: 20102, Message: "The user was not found."}
 	ErrTokenInvalid      = &Errno{Code: 20103, Message: "The token was invalid."}
 	ErrPasswordIncorrect = &Errno{Code: 20104, Message: "The password was incorrect."}
+
+	//server errors
+	ErrCapacityExceeded = &Errno{Code: 30001, Message: "Server capacity exceeded."}
+	ErrTimedOut         = &Errno{Code: 30002, Message: "Timed out while waiting for a pending request to complete."}
+	ErrContextCanceled  = &Errno{Code: 30003, Message: "Context was canceled."}
 )
