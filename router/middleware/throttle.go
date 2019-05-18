@@ -3,7 +3,6 @@ package middleware
 import (
 	"apiserver/handler"
 	"apiserver/pkg/errno"
-	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -62,31 +61,26 @@ func (t *throttler) RateLimit(c *gin.Context) {
 	case <-ctx.Done():
 		handler.SendResponse(c, errno.ErrContextCanceled, nil)
 		c.Abort()
-		return
 	case btok := <-t.backlogTokens:
 		timer := time.NewTimer(t.backlogTimeout)
 		defer func() {
 			t.backlogTokens <- btok
 		}()
 		select {
-		case <-timer.C:
-			handler.SendResponse(c, errno.ErrTimedOut, nil)
-			c.Abort()
-			return
 		case <-ctx.Done():
 			handler.SendResponse(c, errno.ErrContextCanceled, nil)
 			c.Abort()
-			return
+		case <-timer.C:
+			handler.SendResponse(c, errno.ErrTimedOut, nil)
+			c.Abort()
 		case tok := <-t.tokens:
 			defer func() {
 				t.tokens <- tok
 			}()
-			fmt.Println("nima")
 			c.Next()
 		}
 	default:
 		handler.SendResponse(c, errno.ErrCapacityExceeded, nil)
 		c.Abort()
-		return
 	}
 }

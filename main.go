@@ -32,10 +32,9 @@ var (
 // @version 1.0
 // @description apiserver demo
 
-// @contact.name lkong
+// @contact.name felyne
 // @contact.url http://www.swagger.io/support
-// @contact.email 2316082691@qq.com
-
+// @contact.email wandu1943@gmail.com
 // @host localhost:8080
 // @BasePath /v1
 func main() {
