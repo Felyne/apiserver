@@ -105,7 +105,6 @@ func pingServer() error {
 	return errors.New("Cannot connect to the router.")
 }
 
-
 func countGoroutines() {
 	http.HandleFunc("/goroutines", func(w http.ResponseWriter, r *http.Request) {
 		num := strconv.FormatInt(int64(runtime.NumGoroutine()), 10)

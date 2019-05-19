@@ -98,11 +98,36 @@ api身份验证用的是 JSON Web Token
 curl -XPOST -H "Content-Type: application/json" http://127.0.0.1:8080/login -d'{"username":"admin","password":"admin"}'
 
 # 请求头带上token
-curl -XPOST -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" http://127.0.0.1:8080/v1/user -d'{"username":"user1","password":"user1234"}'
+# 新增用户
+curl -XPOST -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" \
+http://127.0.0.1:8080/v1/user -d'{"username":"user1","password":"user1234"}'
+
+# 用户列表
+curl -H "Authorization: Bearer ${token}" http://127.0.0.1:8080/v1/user?offset=0&limit=20
 ```
 
 * 可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求头带上token
 * 可用项目根目录下的test.py测试
+
+
+### 性能分析  
+第一种:  
+直接在浏览器访问 http://localhost:8080/debug/pprof 来查看当前 API 服务的状态，包括 CPU 占用情况和内存使用情况等
+
+第二种:  
+安装graphviz
+```
+apt install graphviz
+```
+通过 
+go tool pprof http://127.0.0.1:8080/debug/pprof/profile，查看cpu使用情况  
+go tool pprof http://127.0.0.1:8080/debug/pprof/heap   查看内存使用情况
+
+```
+top10
+svg
+web
+```
 
 ### http压测
 
