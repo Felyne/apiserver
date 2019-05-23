@@ -152,3 +152,6 @@ apt install gnuplot
 ```
 ./wrktest.sh
 ```
+
+### 高可用
+[Keepalived+Nginx实现高可用](https://blog.csdn.net/xyang81/article/details/52556886)
