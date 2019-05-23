@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 参考 https://blog.csdn.net/xyang81/article/details/52556886
+# 参考 https://blog.csdn.net/l1028386804/article/details/80098334
 
 apt install libssl-dev openssl libpopt-dev
 apt install nginx keepalived
