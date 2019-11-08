@@ -9,6 +9,41 @@ definitions:
       message:
         type: string
     type: object
+  model.Token:
+    properties:
+      token:
+        type: string
+    type: object
+  model.UserInfo:
+    properties:
+      createdAt:
+        description: 创建时间
+        type: string
+      id:
+        description: 用户id
+        type: integer
+      password:
+        description: 密码
+        type: string
+      sayHello:
+        description: 测试
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      username:
+        description: 用户名
+        example: 小明
+        format: string
+        type: string
+    required:
+    - createdAt
+    - id
+    - password
+    - sayHello
+    - updatedAt
+    - username
+    type: object
   model.UserModel:
     properties:
       password:
@@ -16,44 +51,74 @@ definitions:
       username:
         type: string
     required:
-    - username
     - password
+    - username
     type: object
   user.CreateRequest:
     properties:
       password:
+        default: "123456"
+        description: 密码
+        example: "123456"
+        format: string
         type: string
       username:
+        description: 用户名
+        example: 小明
+        format: string
+        maxLength: 16
+        minLength: 1
         type: string
+    required:
+    - password
+    - username
     type: object
   user.CreateResponse:
     properties:
       username:
+        description: 用户名
+        example: 小明
+        format: string
         type: string
+    required:
+    - username
     type: object
   user.ListRequest:
     properties:
       limit:
+        example: 10
+        format: int64
+        maximum: 1000
+        minimum: 1
         type: integer
       offset:
+        example: 0
+        format: int64
+        maximum: 1000
+        minimum: 0
         type: integer
       username:
         type: string
+    required:
+    - offset
     type: object
   user.SwaggerListResponse:
     properties:
       totalCount:
+        format: int64
         type: integer
       userList:
         items:
-          type: '&{model UserInfo}'
+          $ref: '#/definitions/model.UserInfo'
         type: array
+    required:
+    - totalCount
     type: object
 host: localhost:8080
 info:
   contact:
-    email: 2316082691@qq.com
-    name: Felyne
+    email: wandu1943@gmail.com
+    name: felyne
     url: http://www.swagger.io/support
   description: apiserver demo
   license: {}
@@ -68,18 +133,18 @@ paths:
         name: username
         required: true
         schema:
-          type: object
+          type: string
       - description: Password
         in: body
         name: password
         required: true
         schema:
-          type: object
+          type: string
       produces:
       - application/json
       responses:
         "200":
-          description: '{"code":0,"message":"OK","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjgwMTY5MjIsImlkIjowLCJuYmYiOjE1MjgwMTY5MjIsInVzZXJuYW1lIjoiYWRtaW4ifQ.LjxrK9DuAwAzUD8-9v43NzWBN7HXsSLfebw92DKd1JQ"}}'
+          description: '{"code":0,"message":"OK","data":{"token":"9v43NzWBN7HXsSLfebw92DKd1JQ"}}'
           schema:
             type: string
       summary: Login generates the authentication token
@@ -165,7 +230,6 @@ paths:
             00:25:33","updatedAt":"2018-05-28 00:25:33"}]}}'
           schema:
             $ref: '#/definitions/user.SwaggerListResponse'
-            type: object
       summary: List the users in the database
       tags:
       - user
@@ -188,7 +252,6 @@ paths:
           description: '{"code":0,"message":"OK","data":{"username":"kong"}}'
           schema:
             $ref: '#/definitions/user.CreateResponse'
-            type: object
       summary: Add new user to the database
       tags:
       - user
@@ -210,7 +273,6 @@ paths:
           description: '{"code":0,"message":"OK","data":null}'
           schema:
             $ref: '#/definitions/handler.Response'
-            type: object
       summary: Delete an user by the user identifier
       tags:
       - user
@@ -238,7 +300,6 @@ paths:
           description: '{"code":0,"message":"OK","data":null}'
           schema:
             $ref: '#/definitions/handler.Response'
-            type: object
       summary: Update a user info by the user identifier
       tags:
       - user
@@ -248,8 +309,11 @@ paths:
       - application/json
       description: Get an user by username
       parameters:
-      - description: Username
+      - default: '"linus"'
+        description: 用户名
         in: path
+        maxLength: 50
+        minLength: 1
         name: username
         required: true
         type: string
@@ -260,7 +324,6 @@ paths:
           description: '{"code":0,"message":"OK","data":{"username":"kong","password":"$2a$10$E0kwtmtLZbwW/bDQ8qI8e.eHPqhQOW9tvjwpyo/p05f/f4Qvr3OmS"}}'
           schema:
             $ref: '#/definitions/model.UserModel'
-            type: object
       summary: Get an user by the user identifier
       tags:
       - user

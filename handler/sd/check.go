@@ -23,7 +23,7 @@ const (
 // @Tags sd
 // @Accept  json
 // @Produce  json
-// @Success 200 {string} plain "OK"
+// @Success 200 {string} string "OK"
 // @Router /sd/health [get]
 func HealthCheck(c *gin.Context) {
 	message := "OK"
@@ -35,7 +35,7 @@ func HealthCheck(c *gin.Context) {
 // @Tags sd
 // @Accept  json
 // @Produce  json
-// @Success 200 {string} plain "OK - Free space: 17233MB (16GB) / 51200MB (50GB) | Used: 33%"
+// @Success 200 {string} string "OK - Free space: 17233MB (16GB) / 51200MB (50GB) | Used: 33%"
 // @Router /sd/disk [get]
 func DiskCheck(c *gin.Context) {
 	u, _ := disk.Usage("/")
@@ -66,7 +66,7 @@ func DiskCheck(c *gin.Context) {
 // @Tags sd
 // @Accept  json
 // @Produce  json
-// @Success 200 {string} plain "CRITICAL - Load average: 1.78, 1.99, 2.02 | Cores: 2"
+// @Success 200 {string} string "CRITICAL - Load average: 1.78, 1.99, 2.02 | Cores: 2"
 // @Router /sd/cpu [get]
 func CPUCheck(c *gin.Context) {
 	cores, _ := cpu.Counts(false)
@@ -96,7 +96,7 @@ func CPUCheck(c *gin.Context) {
 // @Tags sd
 // @Accept  json
 // @Produce  json
-// @Success 200 {string} plain "OK - Free space: 402MB (0GB) / 8192MB (8GB) | Used: 4%"
+// @Success 200 {string} string "OK - Free space: 402MB (0GB) / 8192MB (8GB) | Used: 4%"
 // @Router /sd/ram [get]
 func RAMCheck(c *gin.Context) {
 	u, _ := mem.VirtualMemory()

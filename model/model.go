@@ -13,12 +13,12 @@ type BaseModel struct {
 }
 
 type UserInfo struct {
-	Id        uint64 `json:"id"`
-	Username  string `json:"username"`
-	SayHello  string `json:"sayHello"`
-	Password  string `json:"password"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	Id        uint64 `json:"id" binding:"required"` //用户id
+	Username  string `json:"username" example:"小明" format:"string" binding:"required"` //用户名
+	SayHello  string `json:"sayHello" binding:"required"` //测试
+	Password  string `json:"password" binding:"required"` //密码
+	CreatedAt string `json:"createdAt" binding:"required"` //创建时间
+	UpdatedAt string `json:"updatedAt" binding:"required"` //更新时间
 }
 
 type UserList struct {

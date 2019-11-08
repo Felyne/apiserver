@@ -109,6 +109,13 @@ curl -H "Authorization: Bearer ${token}" http://127.0.0.1:8080/v1/user?offset=0&
 * 可用postman做接口测试，login之后把token保存到环境变量或者全局变量，请求头带上token
 * 可用项目根目录下的test.py测试
 
+### 生成API文档  
+首先安装 [swag](https://github.com/swaggo/swag)   
+```shell
+# 在项目根目录下执行命令会生成docs目录
+swag init
+```
+可以部署[YApi](https://github.com/fjc0k/docker-YApi)来管理项目的api文档，它可以导入`docs/swagger.json`文件
 
 ### 性能分析  
 第一种:  
@@ -155,3 +162,15 @@ apt install gnuplot
 
 ### 高可用
 [Keepalived+Nginx实现高可用](https://blog.csdn.net/xyang81/article/details/52556886)
+
+### nginx常用命令
+```
+nginx -s stop       快速关闭 Nginx，可能不保存相关信息，并迅速终止 Web 服务
+nginx -s quit       平稳关闭 Nginx，保存相关信息，有安排的结束 Web 服务
+nginx -s reload     因改变了 Nginx 相关配置，需要重新加载配置而重载
+nginx -s reopen     重新打开日志文件
+nginx -c filename   为 Nginx 指定一个配置文件，来代替默认的
+nginx -t            不运行，而仅仅测试配置文件。Nginx 将检查配置文件的语法的正确性，并尝试打开配置文件中所引用到的文件
+nginx -v            显示 Nginx 的版本
+nginx -V            显示 Nginx 的版本、编译器版本和配置参数
+```

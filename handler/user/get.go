@@ -13,7 +13,7 @@ import (
 // @Tags user
 // @Accept  json
 // @Produce  json
-// @Param username path string true "Username"
+// @Param username path string true "用户名" Minlength(1) Maxlength(50) default("linus")
 // @Success 200 {object} model.UserModel "{"code":0,"message":"OK","data":{"username":"kong","password":"$2a$10$E0kwtmtLZbwW/bDQ8qI8e.eHPqhQOW9tvjwpyo/p05f/f4Qvr3OmS"}}"
 // @Router /user/{username} [get]
 func Get(c *gin.Context) {

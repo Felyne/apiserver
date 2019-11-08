@@ -37,6 +37,9 @@ var (
 // @contact.email wandu1943@gmail.com
 // @host localhost:8080
 // @BasePath /v1
+
+// @in header
+// @name Authorization
 func main() {
 	pflag.Parse()
 	if *version {
