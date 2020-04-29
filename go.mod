@@ -19,7 +19,6 @@ require (
 	github.com/shirou/gopsutil v2.19.10+incompatible
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.5.0
-	github.com/stretchr/testify v1.4.0
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.3
 	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf
